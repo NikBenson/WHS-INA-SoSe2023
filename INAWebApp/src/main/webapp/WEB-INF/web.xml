@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         id="INAWebApp"
+         version="5.0">
+
+    <display-name>INA Web-App</display-name>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>hello</servlet-name>
+        <display-name>Hello</display-name>
+        <description>HelloServlet</description>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.hello.HelloServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hello</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>feed-add</servlet-name>
+        <display-name>Add Feed</display-name>
+        <description>AddFeedServlet</description>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.add.AddFeedServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed-add</servlet-name>
+        <url-pattern>/feed/add</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>feed-list</servlet-name>
+        <display-name>Add Feed</display-name>
+        <description>AddFeedServlet</description>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.ListFeedsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed-list</servlet-name>
+        <url-pattern>/feed</url-pattern>
+    </servlet-mapping>
+
+</web-app>
