@@ -29,7 +29,7 @@
         } else {
             out.println("<ul>");
             for (final RSSItem item : items) {
-                out.println(String.format("<li onClick=\"window.location.href=\\\"%s\\\"\"><div>%s<br><a href=\"%s\">%s</a><br><p>%s</p><br><div><span align=\"left\">%s</span><span align=\"right\">%s</span></div></div></li>", item.link(), item.title(), item.link(), item.link(), item.description(), item.category(), DATE_TIME_FORMATTER.format(item.pubDate())));
+                out.println(String.format("<li><div><a href=\"%s\">%s</a><br><p>%s</p><br><div><span>%s</span> - <span>%s</span></div></div></li>", item.link(), item.title(), item.description(), item.category(), DATE_TIME_FORMATTER.format(item.pubDate())));
             }
             out.println("</ul>");
         }

@@ -8,7 +8,8 @@
 <h1><%= "Landing Page" %>
 </h1>
 <br/>
-<a href="hello">Hello Servlet</a>
-<a href="feed/add">Add Feed Servlet</a>
+<a href="hello">Hello</a>
+<a href="feed/">Feed</a>
+<a href="feed/edit/">Edit Feed</a>
 </body>
 </html>

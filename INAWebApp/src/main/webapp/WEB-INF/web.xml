@@ -6,7 +6,7 @@
          version="5.0">
 
     <display-name>INA Web-App</display-name>
-    
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -14,7 +14,6 @@
     <servlet>
         <servlet-name>hello</servlet-name>
         <display-name>Hello</display-name>
-        <description>HelloServlet</description>
         <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.hello.HelloServlet</servlet-class>
     </servlet>
     <servlet-mapping>
@@ -23,25 +22,34 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>feed-add</servlet-name>
-        <display-name>Add Feed</display-name>
-        <description>AddFeedServlet</description>
-        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.add.AddFeedServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>feed-add</servlet-name>
-        <url-pattern>/feed/add</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>feed-list</servlet-name>
         <display-name>Add Feed</display-name>
-        <description>AddFeedServlet</description>
         <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.ListFeedsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>feed-list</servlet-name>
-        <url-pattern>/feed</url-pattern>
+        <url-pattern>/feed/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>feed-edit</servlet-name>
+        <display-name>Edit Feed</display-name>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.edit.EditFeedServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed-edit</servlet-name>
+        <url-pattern>/feed/edit/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>feed-delete</servlet-name>
+        <display-name>Edit Feed</display-name>
+        <description>This is a workaround as forms do not support DELETE methode</description>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.feed.edit.DeleteFeedServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed-delete</servlet-name>
+        <url-pattern>/feed/edit/delete</url-pattern>
     </servlet-mapping>
 
 </web-app>

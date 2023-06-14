@@ -3,7 +3,7 @@ package de.whs.ni37900.ina.praktikum.inawebapp.services;
 import jakarta.servlet.http.HttpSession;
 
 public class HelperBase {
-    private HttpSession session;
+    protected HttpSession session;
 
     protected static <T extends HelperBase> T require(final HttpSession session, final String name, HelperFactory<T> factory) {
         if(session.getAttribute(name) == null)

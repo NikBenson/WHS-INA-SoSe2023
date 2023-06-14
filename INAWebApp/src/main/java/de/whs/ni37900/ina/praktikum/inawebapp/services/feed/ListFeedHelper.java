@@ -21,13 +21,20 @@ public class ListFeedHelper extends HelperBase {
         return HelperBase.require(session, "ListFeedHelper", ListFeedHelper::new);
     }
 
-    private final FeedsBean feeds = new FeedsBean();
+    public final FeedsBean feeds = new FeedsBean();
 
     public ListFeedHelper(final HttpSession session) {
         super(session);
     }
 
+    private static long id = 0;
+
+
     public void addFeeds(final RSSFeed... feeds) {
+        for (var feed : feeds) {
+            feed.setId(id++);
+        }
+
         this.feeds.setFeeds(Stream.concat(this.feeds.getFeeds().stream(), Stream.of(feeds)).collect(Collectors.toList()));
     }
 
@@ -52,6 +59,6 @@ public class ListFeedHelper extends HelperBase {
         }));
         request.setAttribute("feeds", parsedFeeds);
 
-        request.getRequestDispatcher("views/feed/list.jsp").include(request, response);
+        request.getRequestDispatcher("../views/feed/list.jsp").include(request, response);
     }
 }
