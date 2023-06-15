@@ -2,10 +2,13 @@ package de.whs.ni37900.ina.praktikum.inawebapp.services.feed.edit;
 
 import de.whs.ni37900.ina.p1.HTMLToRSSParser;
 import de.whs.ni37900.ina.p1.RSSFeed;
-import de.whs.ni37900.ina.praktikum.inawebapp.models.feed.FeedsBean;
 import de.whs.ni37900.ina.praktikum.inawebapp.models.feed.edit.AddFeedBean;
+import de.whs.ni37900.ina.praktikum.inawebapp.models.user.UserBean;
 import de.whs.ni37900.ina.praktikum.inawebapp.services.HelperBase;
 import de.whs.ni37900.ina.praktikum.inawebapp.services.feed.ListFeedHelper;
+import de.whs.ni37900.ina.praktikum.inawebapp.services.hibernate.PersistenceHelper;
+import de.whs.ni37900.ina.praktikum.inawebapp.services.user.AuthHelper;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,14 +17,20 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EditFeedHelper extends HelperBase {
-    private static Validator validator;
+    private final Validator validator;
 
     public static EditFeedHelper require(final HttpSession session) {
         return HelperBase.require(session, "AddFeedHelper", EditFeedHelper::new);
@@ -39,8 +48,14 @@ public class EditFeedHelper extends HelperBase {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-        final ListFeedHelper listFeedHelper = ListFeedHelper.require(request.getSession());
-        request.setAttribute("feeds", listFeedHelper.feeds);
+        final AuthHelper auth = AuthHelper.require(session);
+        if (!auth.isLoggedIn()) {
+            response.sendRedirect("../../user/");
+            return;
+        }
+        final UserBean user = auth.getUser();
+
+        request.setAttribute("feeds", user.getFeeds());
 
         final AddFeedBean bean = new AddFeedBean();
         request.setAttribute("bean", bean);
@@ -75,6 +90,13 @@ public class EditFeedHelper extends HelperBase {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final AuthHelper auth = AuthHelper.require(session);
+        if (!auth.isLoggedIn()) {
+            response.sendRedirect("../../user/");
+            return;
+        }
+        final UserBean user = auth.getUser();
+
         final String url = request.getParameter("url");
 
         if (url == null) {
@@ -90,15 +112,30 @@ public class EditFeedHelper extends HelperBase {
             return;
         }
 
-        ListFeedHelper.require(request.getSession()).addFeeds(feeds);
+        final PersistenceHelper persistence = PersistenceHelper.require(session);
+        for (RSSFeed feed :
+                feeds) {
+            feed.setOwner(user);
+            if (validator.validate(feed).isEmpty())
+                persistence.saveOrUpdate(feed);
+        }
+
         doGet(request, response);
     }
 
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final AuthHelper auth = AuthHelper.require(session);
+        if (!auth.isLoggedIn()) {
+            response.sendRedirect("../../user/");
+            return;
+        }
+        final UserBean user = auth.getUser();
+
         final String idStr = request.getParameter("id");
 
         if (idStr == null) {
-            response.setStatus(400);
+            request.setAttribute("error", "Trying to delete invalid ID!");
+            response.sendRedirect(".");
             return;
         }
 
@@ -108,14 +145,21 @@ public class EditFeedHelper extends HelperBase {
             id = Long.parseUnsignedLong(idStr);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Trying to delete invalid ID!");
-            doGet(request, response);
+            response.sendRedirect(".");
             return;
         }
 
 
-        final FeedsBean feeds = ListFeedHelper.require(request.getSession()).feeds;
+        List<RSSFeed> feeds = user.getFeeds();
+        if (feeds == null) {
+            feeds = List.of();
+        }
 
-        feeds.setFeeds(feeds.getFeeds().stream().filter(feed -> !Objects.equals(feed.getId(), id)).collect(Collectors.toList()));
-        doGet(request, response);
+        final SessionFactory sessionFactory = PersistenceHelper.require(session).getSessionFactory();
+        final Session hibSession = sessionFactory.getCurrentSession();
+        final Transaction transaction = hibSession.beginTransaction();
+        feeds.stream().filter(feed -> Objects.equals(feed.getId(), id)).forEach(hibSession::remove);
+        transaction.commit();
+        response.sendRedirect(".");
     }
 }

@@ -1,4 +1,3 @@
-<%@ page import="de.whs.ni37900.ina.praktikum.inawebapp.models.feed.FeedsBean" %>
 <%@ page import="jakarta.validation.ConstraintViolation" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="de.whs.ni37900.ina.p1.RSSFeed" %>
@@ -12,18 +11,14 @@
 <body>
 <h1>Edit Feed</h1>
 <%
-    final FeedsBean feedsBean = (FeedsBean) request.getAttribute("feeds");
-    if (feedsBean != null) {
-        final List<RSSFeed> feeds = feedsBean.getFeeds();
-        if (feeds != null && !feeds.isEmpty()) {
-
-            out.println("<table>");
-            out.println("<th>Name</th><th>URL</th><th></th>");
-            for (final RSSFeed feed : feedsBean.getFeeds()) {
-                out.println(String.format("<tr><td>%s</td><td><a href=\"%s\">%s</a></td><td><form method=\"GET\" action=\"delete\"><input name=\"id\" type=\"hidden\" value=\"%s\"></input><input type=\"submit\" value=\"Delete\"></form></td></tr>", feed.getName(), feed.getUri(), feed.getUri(), feed.getId()));
-            }
-            out.println("<table>");
+    final List<RSSFeed> feeds = (List<RSSFeed>) request.getAttribute("feeds");
+    if (feeds != null && !feeds.isEmpty()) {
+        out.println("<table>");
+        out.println("<th>Name</th><th>URL</th><th></th>");
+        for (final RSSFeed feed : feeds) {
+            out.println(String.format("<tr><td>%s</td><td><a href=\"%s\">%s</a></td><td><form method=\"GET\" action=\"delete\"><input name=\"id\" type=\"hidden\" value=\"%s\"></input><input type=\"submit\" value=\"Delete\"></form></td></tr>", feed.getName(), feed.getUri(), feed.getUri(), feed.getId()));
         }
+        out.println("<table>");
     }
 %>
 

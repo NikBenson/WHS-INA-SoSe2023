@@ -52,4 +52,25 @@
         <url-pattern>/feed/edit/delete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>user-login</servlet-name>
+        <display-name>User</display-name>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.user.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>user-login</servlet-name>
+        <url-pattern>/user/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>user-logout</servlet-name>
+        <display-name>User</display-name>
+        <description>This is a workaround as forms do not support DELETE methode</description>
+        <servlet-class>de.whs.ni37900.ina.praktikum.inawebapp.controlers.user.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>user-logout</servlet-name>
+        <url-pattern>/user/logout</url-pattern>
+    </servlet-mapping>
+
 </web-app>

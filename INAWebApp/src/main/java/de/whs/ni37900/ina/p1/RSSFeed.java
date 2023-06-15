@@ -1,8 +1,7 @@
 package de.whs.ni37900.ina.p1;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import de.whs.ni37900.ina.praktikum.inawebapp.models.user.UserBean;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
@@ -10,18 +9,26 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Objects;
 
 @Entity
+@Table(name = "feeds")
 public class RSSFeed {
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
-    @NotNull(message = "Bitte gib einen Namen ein.")
-    @Size(min = 3, max = 20, message = "Name muss zwischen 3 und 20 Zeichen lang sein.")
+    @Size(max = 100)
+    @Column(name = "name")
     private String name;
 
     @NotNull(message = "Feed muss eine URL haben.")
     @URL(message = "Muss eine URL sein!")
+    @Column(name = "link")
     private String uri;
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private UserBean owner;
 
     public String getName() {
         return name;
@@ -46,6 +53,14 @@ public class RSSFeed {
         var that = (RSSFeed) obj;
         return Objects.equals(this.name, that.name) &&
                 Objects.equals(this.uri, that.uri);
+    }
+
+    public UserBean getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserBean owner) {
+        this.owner = owner;
     }
 
     @Override

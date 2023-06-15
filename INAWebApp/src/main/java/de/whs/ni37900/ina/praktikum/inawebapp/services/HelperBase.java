@@ -9,7 +9,9 @@ public class HelperBase {
         if(session.getAttribute(name) == null)
             session.setAttribute(name, factory.create(session));
 
-        return (T) session.getAttribute(name);
+        final T helper =  (T) session.getAttribute(name);
+        helper.session = session;
+        return helper;
     }
 
     public HelperBase(final HttpSession session) {

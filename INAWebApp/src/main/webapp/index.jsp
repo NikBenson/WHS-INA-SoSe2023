@@ -11,5 +11,6 @@
 <a href="hello">Hello</a>
 <a href="feed/">Feed</a>
 <a href="feed/edit/">Edit Feed</a>
+<a href="user/">Login</a>
 </body>
 </html>
